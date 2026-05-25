@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    restart: always
+    ports:
+      - "8348:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: golang_web_server
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  user-service:
+    build: ./user-service
+    container_name: user-service
+    restart: always
+    ports:
+      - "8081:8080"
+    environment:
+      - DATABASE_URL=postgres://postgres:password@postgres:5432/golang_web_server
+      - SERVER_PORT=:8080
+      - SECRET_KEY=super-secret-jwt-key-user-service-2026
+    depends_on:
+      - postgres
+    networks:
+      - backend-network
+
+  booking-service:
+    build: ./booking-service
+    container_name: booking-service
+    restart: always
+    ports:
+      - "8082:8080"
+    environment:
+      - DATABASE_URL=postgres://postgres:password@postgres:5432/golang_web_server
+      - SERVER_PORT=:8080
+      - SECRET_KEY=super-secret-jwt-key-booking-service-2026
+    depends_on:
+      - postgres
+      - user-service
+    networks:
+      - backend-network
+
+volumes:
+  postgres_data:
+
+networks:
+  backend-network:
+    driver: bridge
