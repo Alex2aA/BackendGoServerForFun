@@ -1,0 +1,339 @@
+{
+	"info": {
+		"name": "BackendGoServerForFun",
+		"description": "Тестовые запросы для проверки микросервисов:\n- user-service (порт 8081): регистрация/логин\n- booking-service (порт 8082): hostel/house/booking\n\nЗапуск: docker-compose up --build -d",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "user-service (8081)",
+			"description": "Сервис аутентификации пользователей",
+			"item": [
+				{
+					"name": "Register user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 201 Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test(\"Has token\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.token).to.be.a('string');",
+									"});",
+									"pm.variables.set(\"authToken\", pm.response.json().token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"john\",\n    \"password\": \"secret123\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/user/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"user",
+								"register"
+							]
+						},
+						"description": "Регистрация нового пользователя. Возвращает JWT токен."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"status": "Created",
+							"code": 201,
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiIs...\",\n    \"message\": \"User registered successfully\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Login user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Has token\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.token).to.be.a('string');",
+									"});",
+									"pm.variables.set(\"authToken\", pm.response.json().token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"john\",\n    \"password\": \"secret123\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/user/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"user",
+								"login"
+							]
+						},
+						"description": "Логин существующего пользователя. Возвращает JWT токен."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"status": "OK",
+							"code": 200,
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiIs...\",\n    \"message\": \"Login successful\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "booking-service (8082)",
+			"description": "Сервис бронирования хостелов и домов",
+			"item": [
+				{
+					"name": "Create hostel",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 201 Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test(\"Has message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.eql(\"Hostel created successfully\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Sunset Hostel\",\n    \"description\": \"Cozy hostel near the beach\",\n    \"rate\": 4\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8082/api/hostel",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"hostel"
+							]
+						},
+						"description": "Создание нового хостела. rate: 1-5."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"status": "Created",
+							"code": 201,
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n    \"message\": \"Hostel created successfully\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Create house",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 201 Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test(\"Has message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.eql(\"House created successfully\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"hostel_id\": \"hostel-001\",\n    \"address\": \"123 Beach St\",\n    \"number_of_rooms\": 3,\n    \"price_per_day\": 50,\n    \"name\": \"Beach House\",\n    \"description\": \"Nice house with ocean view\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8082/api/house",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"house"
+							]
+						},
+						"description": "Создание нового дома/комнаты в хостеле."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"status": "Created",
+							"code": 201,
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n    \"message\": \"House created successfully\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Create booking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 201 Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test(\"Has message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.eql(\"Booking created successfully\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"house_id\": \"house-001\",\n    \"user_id\": \"user-001\",\n    \"date_start\": \"2026-06-01\",\n    \"date_end\": \"2026-06-05\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8082/api/booking",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"booking"
+							]
+						},
+						"description": "Создание бронирования. Даты в формате YYYY-MM-DD."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"status": "Created",
+							"code": 201,
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\n    \"message\": \"Booking created successfully\"\n}"
+						}
+					]
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost"
+		},
+		{
+			"key": "userPort",
+			"value": "8081"
+		},
+		{
+			"key": "bookingPort",
+			"value": "8082"
+		}
+	]
+}

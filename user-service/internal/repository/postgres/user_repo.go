@@ -2,10 +2,10 @@ package postgres
 
 import (
 	"context"
-	"database/sql"
 
 	"github.com/Alex2aA/user-service/internal/domain"
 	"github.com/Alex2aA/user-service/pkg/logger"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"go.uber.org/zap"
 )
@@ -37,7 +37,7 @@ func (r *UserRepository) GetByUsername(ctx context.Context, username string) (*d
 		FROM users WHERE username = $1`, username).
 		Scan(&user.ID, &user.Username, &user.Password, &user.Alias, &user.RefreshToken)
 
-	if err == sql.ErrNoRows {
+	if err == pgx.ErrNoRows {
 		return nil, nil
 	}
 	if err != nil {

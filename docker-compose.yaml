@@ -13,6 +13,8 @@ services:
       POSTGRES_DB: golang_web_server
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend-network
 
   user-service:
     build: ./user-service
@@ -21,7 +23,7 @@ services:
     ports:
       - "8081:8080"
     environment:
-      - DATABASE_URL=postgres://postgres:password@postgres:5432/golang_web_server
+      - DATABASE_URL=postgres://postgres:password@postgres:5432/golang_web_server?sslmode=disable
       - SERVER_PORT=:8080
       - SECRET_KEY=super-secret-jwt-key-user-service-2026
     depends_on:
@@ -36,7 +38,7 @@ services:
     ports:
       - "8082:8080"
     environment:
-      - DATABASE_URL=postgres://postgres:password@postgres:5432/golang_web_server
+      - DATABASE_URL=postgres://postgres:password@postgres:5432/golang_web_server?sslmode=disable
       - SERVER_PORT=:8080
       - SECRET_KEY=super-secret-jwt-key-booking-service-2026
     depends_on:

@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/Alex2aA/BackendGoServerForFun/internal/repository"
-	"github.com/Alex2aA/BackendGoServerForFun/internal/usecase/token"
-	"github.com/Alex2aA/BackendGoServerForFun/pkg/logger"
+	"github.com/Alex2aA/booking-service/internal/repository"
+	"github.com/Alex2aA/booking-service/internal/usecase/token"
+	"github.com/Alex2aA/booking-service/pkg/logger"
 	"go.uber.org/zap"
 )
 

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/Alex2aA/BackendGoServerForFun/internal/usecase"
+	"github.com/Alex2aA/booking-service/internal/usecase"
 )
 
 // @Summary Register
